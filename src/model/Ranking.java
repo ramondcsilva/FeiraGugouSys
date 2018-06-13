@@ -10,6 +10,7 @@ public class Ranking {
     private Pagina[] menosVisitadas;
     private Pagina[] maisRelevantes;
     private LinkedList paginas;
+    private static int l = 0;
     
     public Ranking() {
         this.maisBuscadas = new Palavra[3];

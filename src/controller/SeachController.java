@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller;
 
 import java.io.BufferedReader;
@@ -10,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import model.*;
+import util.*;
 
 public class SeachController {
     private static Ranking rank = new Ranking();
@@ -33,6 +29,7 @@ public class SeachController {
         int id = 0;
         Pagina pag = new Pagina(diretorio);
         rank.addPaginas(pag);
+        System.out.println(pag);
         
         if(fArq.exists()){
             try{
@@ -46,6 +43,7 @@ public class SeachController {
                             linhaAtual = linhaAtual.substring(linhaAtual.indexOf(" ")+1,linhaAtual.length());
                             p.setId(id++);
                             pag.addPalavra(p);
+                            System.out.print(p+" ");
                         }
                     }
                 }    
@@ -56,12 +54,33 @@ public class SeachController {
     }
     
     public static void imprimePaginas(){
-        int i = 0;
-        while(i < 80){
-            System.out.println(rank.getPaginas().get(i++));
+        Iterator iterator = rank.getPaginas().iterator();
+        while(iterator.hasNext()){
+            Pagina p = (Pagina) iterator.next();
+            System.out.println(p);
         }
     }
-
+    
+    public static void imprimeTexto(int index){
+        Pagina p = (Pagina)rank.getPaginas().get(index);
+        Iterator i =  p.getPalavras().iterator();
+        int j = 0;
+        System.out.println(p);
+        while(i.hasNext()){
+            Palavra word = (Palavra) i.next();
+            if(j%12==0){
+                System.out.println(word);
+            }else{
+                System.out.print(word);
+            }
+            j++;
+        }
+    }
+    
+    public static void imprimePalavra(int index){
+        Pagina p = (Pagina)rank.getPaginas().get(index);
+        System.out.print(p.getPalavras().get(index));
+    }
     public static Ranking getRank() {
         return rank;
     }
