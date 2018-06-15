@@ -2,6 +2,7 @@ package controller;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileReader;
 import java.io.IOException;
 import model.*;
@@ -14,8 +15,10 @@ public class SeachController {
     }
     
     public static void carregaArquivos(){
+        FileFilter filter = (File file) -> file.getName().endsWith(".txt");
+        
         File file = new File("C:\\Users\\ramon\\Downloads\\JAVA\\MI Programacao\\PBL3\\FeiraGugouSys\\src\\view\\txt");
-        File afile[] = file.listFiles();
+        File afile[] = file.listFiles(filter);
         int i = 0;
         for (int j = afile.length; i < j; i++) {
             File arquivos = afile[i];
@@ -29,12 +32,13 @@ public class SeachController {
         int id = 0;
         Pagina pag = new Pagina(diretorio);
         rank.addPaginas(pag);
-        System.out.println(pag);
+        System.out.println("\n"+pag);
         
         if(fArq.exists()){
             try{
                 FileReader fReader = new FileReader("C:\\Users\\ramon\\Downloads\\JAVA\\MI Programacao\\PBL3\\FeiraGugouSys\\src\\view\\txt\\"+diretorio);
                 BufferedReader rLeitor = new BufferedReader(fReader);
+                
                 
                 while((linhaAtual=rLeitor.readLine())!= null){
                     if(linhaAtual.contains(" ")){
@@ -81,6 +85,7 @@ public class SeachController {
         Pagina p = (Pagina)rank.getPaginas().get(index);
         System.out.print(p.getPalavras().get(index));
     }
+    
     public static Ranking getRank() {
         return rank;
     }
