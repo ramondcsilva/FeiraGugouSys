@@ -1,15 +1,15 @@
 package model;
 
-import util.LinkedList;
+import util.TreeAVL;
 
-public class Pagina {
+public class Pagina implements Comparable{
     private String nome;
-    private LinkedList palavras;
+    private TreeAVL palavras;
     private int relevancia;
     
     public Pagina(String nome){
         this.nome = nome;
-        palavras = new LinkedList();
+        palavras = new TreeAVL();
         relevancia  = 0;
     }
 
@@ -23,24 +23,24 @@ public class Pagina {
     
     public void addPalavra(Palavra word){
         if(word != null){
-            palavras.addLast(word);
+            palavras.insert((Comparable)word);
         }
     }
     
     public void removePalavra(Palavra word){
         if(word != null){
-            palavras.remove(word);
+            palavras.delete((Comparable)word);
         }
     }
-    
-    public LinkedList getPalavras() {
+
+    public TreeAVL getPalavras() {
         return palavras;
     }
 
-    public void setPalavras(LinkedList palavras) {
+    public void setPalavras(TreeAVL palavras) {
         this.palavras = palavras;
     }
-
+    
     public int getRelevancia() {
         return relevancia;
     }
@@ -68,5 +68,10 @@ public class Pagina {
     @Override
     public String toString() {
         return nome+" ";
+    }
+
+    @Override
+    public int compareTo(Object t) {
+        return (this.nome.compareTo(((Pagina) t).getNome()));
     }
 }

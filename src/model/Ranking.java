@@ -1,7 +1,7 @@
 package model;
 
 import java.util.Arrays;
-import util.LinkedList;
+import util.TreeAVL;
 
 public class Ranking {
     private Palavra[] maisBuscadas;
@@ -9,7 +9,7 @@ public class Ranking {
     private Pagina[] maisVisitadas;
     private Pagina[] menosVisitadas;
     private Pagina[] maisRelevantes;
-    private LinkedList paginas;
+    private TreeAVL paginas;
     private static int l = 0;
     
     public Ranking() {
@@ -18,7 +18,7 @@ public class Ranking {
         this.maisVisitadas = new Pagina[3];
         this.menosVisitadas = new Pagina[3];
         this.maisRelevantes = new Pagina[3];
-        paginas = new LinkedList();
+        paginas = new TreeAVL();
     }
 
     public Palavra[] getMaisBuscadas() {
@@ -81,17 +81,17 @@ public class Ranking {
         this.maisRelevantes = maisRelevantes;
     }
 
-    public LinkedList getPaginas() {
+    public TreeAVL getPaginas() {
         return paginas;
     }
 
-    public void setPaginas(LinkedList paginas) {
+    public void setPaginas(TreeAVL paginas) {
         this.paginas = paginas;
     }
     
     public void addPaginas(Pagina pag){
         if(pag != null){    
-            paginas.addLast(pag);
+            paginas.insert((Comparable)pag);
         }
     }
     

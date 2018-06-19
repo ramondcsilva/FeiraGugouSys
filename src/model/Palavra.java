@@ -1,6 +1,6 @@
 package model;
 
-public class Palavra {
+public class Palavra implements Comparable{
     private String word;
     private int id;
     private int relevancia;
@@ -53,5 +53,10 @@ public class Palavra {
     @Override
     public String toString() {
         return word+" ";
+    }
+
+    @Override
+    public int compareTo(Object t) {
+        return (this.word.compareTo(((Palavra) t).getWord()));
     }
 }

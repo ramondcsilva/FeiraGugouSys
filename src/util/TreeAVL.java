@@ -3,11 +3,12 @@ package util;
 import java.io.Serializable;
 
 public class TreeAVL implements Serializable {
-    
+
     public Node raiz;
     protected int size;
-    
+
     public static class Node {
+
         private Comparable dados;
         private int balanceamento;
         private Node pai;
@@ -18,7 +19,7 @@ public class TreeAVL implements Serializable {
             this.dados = dados;
             this.balanceamento = 0;
         }
-        
+
         public Node(Comparable dados, Node pai, Node esquerda, Node direita) {
             this.dados = dados;
             this.pai = pai;
@@ -105,11 +106,11 @@ public class TreeAVL implements Serializable {
     public boolean contem(Comparable palavra) {
         return estaVazia() ? false : (buscarPalavra(palavra) != null);
     }
-    
-    public int size(){
+
+    public int size() {
         return size;
     }
-    
+
     public void insert(Node palavraAtual, Node palavraInserir) {
 
         if (estaVazia()) {
@@ -162,7 +163,7 @@ public class TreeAVL implements Serializable {
     public void delete(Comparable palavra) {
         delete(this.raiz, palavra);
     }
-    
+
     public void delete(Node atual, Comparable palavra) {
         if (estaVazia()) {
         } else {
@@ -320,5 +321,17 @@ public class TreeAVL implements Serializable {
 
     public void setBalanceamento(Node no) {
         no.setBalanceamento(altura(no.getDireita()) - altura(no.getEsquerda()));
+    }
+
+    public void printTree() {
+        printTree(raiz);
+    }
+
+    protected void printTree(Node t) {
+        if (t != null) {
+            printTree(t.getEsquerda());
+            System.out.println(t.getDados().toString());
+            printTree(t.getDireita());
+        }
     }
 }

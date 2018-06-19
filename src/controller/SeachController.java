@@ -6,7 +6,6 @@ import java.io.FileFilter;
 import java.io.FileReader;
 import java.io.IOException;
 import model.*;
-import util.*;
 
 public class SeachController {
     private static Ranking rank = new Ranking();
@@ -32,13 +31,11 @@ public class SeachController {
         int id = 0;
         Pagina pag = new Pagina(diretorio);
         rank.addPaginas(pag);
-        System.out.println("\n"+pag);
-        
+        //System.out.println("\n"+pag);
         if(fArq.exists()){
             try{
                 FileReader fReader = new FileReader("C:\\Users\\ramon\\Downloads\\JAVA\\MI Programacao\\PBL3\\FeiraGugouSys\\src\\view\\txt\\"+diretorio);
                 BufferedReader rLeitor = new BufferedReader(fReader);
-                
                 
                 while((linhaAtual=rLeitor.readLine())!= null){
                     if(linhaAtual.contains(" ")){
@@ -47,7 +44,7 @@ public class SeachController {
                             linhaAtual = linhaAtual.substring(linhaAtual.indexOf(" ")+1,linhaAtual.length());
                             p.setId(id++);
                             pag.addPalavra(p);
-                            System.out.print(p+" ");
+                            //System.out.print(p+" ");
                         }
                     }
                 }    
@@ -57,33 +54,12 @@ public class SeachController {
         }
     }
     
-    public static void imprimePaginas(){
-        Iterator iterator = rank.getPaginas().iterator();
-        while(iterator.hasNext()){
-            Pagina p = (Pagina) iterator.next();
-            System.out.println(p);
-        }
-    }
-    
-    public static void imprimeTexto(int index){
-        Pagina p = (Pagina)rank.getPaginas().get(index);
-        Iterator i =  p.getPalavras().iterator();
-        int j = 0;
-        System.out.println(p);
-        while(i.hasNext()){
-            Palavra word = (Palavra) i.next();
-            if(j%12==0){
-                System.out.println(word);
-            }else{
-                System.out.print(word);
-            }
-            j++;
-        }
+    //Verificar cast palavra e pagina para imprimir;
+    public static void imprimeTexto(String palavra){
+        rank.getPaginas().printTree();
     }
     
     public static void imprimePalavra(int index){
-        Pagina p = (Pagina)rank.getPaginas().get(index);
-        System.out.print(p.getPalavras().get(index));
     }
     
     public static Ranking getRank() {

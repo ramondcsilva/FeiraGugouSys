@@ -2,20 +2,16 @@ package view;
 
 import controller.SeachController;
 import java.io.IOException;
-import util.Console;
-
+//import util.Console;
+//import model.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         SeachController.carregaArquivos();
-        SeachController.imprimePaginas();
-        int j = 0;
-        
-        while(true){            
-            System.out.print("\nDigite o numero do texto que voce quer imprimir: ");
-            int i = Console.readInt();
-            SeachController.imprimePalavra(i);
-        }
+        //System.out.println("Digite uma palavra");
+        //String k = Console.readString();
+        //Pagina p = new Pagina(k);
+        SeachController.getRank().getPaginas().printTree();
     }
 }
 
