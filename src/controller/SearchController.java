@@ -7,10 +7,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import model.*;
 
-public class SeachController {
+public class SearchController {
     private static Ranking rank = new Ranking();
     
-    public SeachController(){
+    public SearchController(){
     }
     
     public static void carregaArquivos(){
@@ -42,9 +42,13 @@ public class SeachController {
                             Palavra p = new Palavra(linhaAtual.substring(0,linhaAtual.indexOf(" ")));
                             linhaAtual = linhaAtual.substring(linhaAtual.indexOf(" ")+1,linhaAtual.length());
                             p.setId(id++);
+                            p.addPaginas(pag);
                             if(!rank.getPalavras().contem((Comparable)p)){
-                                rank.addPalavras(p);
                                 p.addPaginas(pag);
+                                rank.addPalavras(p);
+                            }else{
+                                Palavra n = (Palavra)rank.getPalavras().buscarObj((Comparable)p);
+                                n.addPaginas(pag);
                             }
                             //System.out.print(p+" ");
                         }
@@ -56,12 +60,14 @@ public class SeachController {
         }
     }
     
-    //Verificar cast palavra e pagina para imprimir;
-    public static void imprimeTexto(String palavra){
-        rank.getPalavras().printTree();
-    }
-    
-    public static void imprimePalavra(int index){
+    public static Palavra search(Palavra p){
+        Palavra palavraRetornada = (Palavra)rank.getPalavras().buscarObj(p);
+        if(palavraRetornada != null){
+            palavraRetornada.setRelevancia(1);
+            palavraRetornada.getPaginas().printList();
+            System.out.println(palavraRetornada.getRelevancia());
+        }
+        return palavraRetornada;
     }
     
     public static Ranking getRank() {

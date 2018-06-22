@@ -31,7 +31,7 @@ public class Pagina implements Comparable{
 
     @Override
     public String toString() {
-        return nome+" ";
+        return nome;
     }
 
     @Override

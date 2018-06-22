@@ -37,7 +37,6 @@ public class Palavra implements Comparable {
     }
 
     public void setRelevancia(int one) {
-        one = 1;
         this.relevancia = relevancia + one;
     }
 
@@ -62,7 +61,7 @@ public class Palavra implements Comparable {
 
     @Override
     public String toString() {
-        return word + " ";
+        return word;
     }
 
     @Override

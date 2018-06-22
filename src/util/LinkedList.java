@@ -198,6 +198,13 @@ public class LinkedList implements IList{
         }
         return ret;
     }
+    
+    @Override
+    public void printList(){
+        for(Node n = head; n != null; n = n.getNext()){
+            System.out.println(n.getData());
+        }
+    }
     /**
      * Cria o iterator da LinkedList.
      * @return iterator da LinkedList. 

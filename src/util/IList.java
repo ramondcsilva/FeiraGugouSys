@@ -22,5 +22,6 @@ public interface IList{
     public Object[] toArray();
             
     public Iterator iterator();
-	
+    
+    public void printList(); 
 }
