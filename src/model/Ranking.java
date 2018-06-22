@@ -9,7 +9,7 @@ public class Ranking {
     private Pagina[] maisVisitadas;
     private Pagina[] menosVisitadas;
     private Pagina[] maisRelevantes;
-    private TreeAVL paginas;
+    private TreeAVL palavras;
     private static int l = 0;
     
     public Ranking() {
@@ -18,7 +18,7 @@ public class Ranking {
         this.maisVisitadas = new Pagina[3];
         this.menosVisitadas = new Pagina[3];
         this.maisRelevantes = new Pagina[3];
-        paginas = new TreeAVL();
+        palavras = new TreeAVL();
     }
 
     public Palavra[] getMaisBuscadas() {
@@ -81,17 +81,17 @@ public class Ranking {
         this.maisRelevantes = maisRelevantes;
     }
 
-    public TreeAVL getPaginas() {
-        return paginas;
+    public TreeAVL getPalavras() {
+        return palavras;
     }
 
-    public void setPaginas(TreeAVL paginas) {
-        this.paginas = paginas;
+    public void setPalavras(TreeAVL palavras) {
+        this.palavras = palavras;
     }
     
-    public void addPaginas(Pagina pag){
-        if(pag != null){    
-            paginas.insert((Comparable)pag);
+    public void addPalavras(Palavra p){
+        if(p != null){    
+            palavras.insert((Comparable)p);
         }
     }
     
@@ -113,7 +113,7 @@ public class Ranking {
             if(Arrays.equals(this.getMenosVisitadas(), rank.getMenosVisitadas())){
                 return true;
             }
-            if(this.getPaginas().equals(rank.getPaginas())){
+            if(this.getPalavras().equals(rank.getPalavras())){
                 return true;
             }
         }

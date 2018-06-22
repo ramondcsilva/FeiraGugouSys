@@ -77,60 +77,60 @@ public class TreeAVL implements Serializable {
         return (raiz == null);
     }
 
-    public Object buscarPalavra(Comparable palavra) {
-        return buscarPalavra(raiz, palavra);
+    public Object buscarObj(Comparable obj) {
+        return buscarObj(raiz, obj);
     }
 
-    private Object buscarPalavra(Node palavraAtual, Comparable palavraBuscada) {
-        if (palavraAtual == null || palavraBuscada == null) {
+    public Object buscarObj(Node objAtual, Comparable objBuscada) {
+        if (objAtual == null || objBuscada == null) {
             return null;
         } else {
-            if (palavraBuscada.compareTo(palavraAtual.getDados()) == 0) {
-                //System.out.println("Encontrado :::: "  + palavraAtual);
-                return palavraAtual.getDados();
-            } else if (palavraBuscada.compareTo(palavraAtual.getDados()) < 0) {
-                System.out.println("esquerda");
-                return buscarPalavra(palavraAtual.getEsquerda(), palavraBuscada);
+            if (objBuscada.compareTo(objAtual.getDados()) == 0) {
+                //System.out.println("Encontrado :::: "  + objAtual);
+                return objAtual.getDados();
+            } else if (objBuscada.compareTo(objAtual.getDados()) < 0) {
+                //System.out.println("esquerda");
+                return buscarObj(objAtual.getEsquerda(), objBuscada);
             } else {
-                System.out.println("direita");
-                return buscarPalavra(palavraAtual.getDireita(), palavraBuscada);
+                //System.out.println("direita");
+                return buscarObj(objAtual.getDireita(), objBuscada);
             }
         }
     }
 
-    public void insert(Comparable palavra) {
-        Node palavraAinserir = new Node(palavra);
-        insert(this.raiz, palavraAinserir);
+    public void insert(Comparable obj) {
+        Node objAinserir = new Node(obj);
+        insert(this.raiz, objAinserir);
     }
 
-    public boolean contem(Comparable palavra) {
-        return estaVazia() ? false : (buscarPalavra(palavra) != null);
+    public boolean contem(Comparable obj) {
+        return estaVazia() ? false : (buscarObj(obj) != null);
     }
 
     public int size() {
         return size;
     }
 
-    public void insert(Node palavraAtual, Node palavraInserir) {
+    public void insert(Node objAtual, Node objInserir) {
 
         if (estaVazia()) {
-            this.raiz = palavraInserir;
+            this.raiz = objInserir;
         } else {
-            if (palavraInserir.getDados().compareTo(palavraAtual.getDados()) < 0) {
-                if (palavraAtual.getEsquerda() == null) {
-                    palavraAtual.setEsquerda(palavraInserir);
-                    palavraInserir.setPai(palavraAtual);
-                    verBalanceamento(palavraAtual);
+            if (objInserir.getDados().compareTo(objAtual.getDados()) < 0) {
+                if (objAtual.getEsquerda() == null) {
+                    objAtual.setEsquerda(objInserir);
+                    objInserir.setPai(objAtual);
+                    verBalanceamento(objAtual);
                 } else {
-                    insert(palavraAtual.getEsquerda(), palavraInserir);
+                    insert(objAtual.getEsquerda(), objInserir);
                 }
-            } else if (palavraInserir.getDados().compareTo(palavraAtual.getDados()) > 0) {
-                if (palavraAtual.getDireita() == null) {
-                    palavraAtual.setDireita(palavraInserir);
-                    palavraInserir.setPai(palavraAtual);
-                    verBalanceamento(palavraAtual);
+            } else if (objInserir.getDados().compareTo(objAtual.getDados()) > 0) {
+                if (objAtual.getDireita() == null) {
+                    objAtual.setDireita(objInserir);
+                    objInserir.setPai(objAtual);
+                    verBalanceamento(objAtual);
                 } else {
-                    insert(palavraAtual.getDireita(), palavraInserir);
+                    insert(objAtual.getDireita(), objInserir);
                 }
             }
         }
@@ -160,20 +160,20 @@ public class TreeAVL implements Serializable {
         }
     }
 
-    public void delete(Comparable palavra) {
-        delete(this.raiz, palavra);
+    public void delete(Comparable obj) {
+        delete(this.raiz, obj);
     }
 
-    public void delete(Node atual, Comparable palavra) {
+    public void delete(Node atual, Comparable obj) {
         if (estaVazia()) {
         } else {
-            if (atual.getDados().compareTo(palavra) > 0) {
-                delete(atual.getEsquerda(), palavra);
+            if (atual.getDados().compareTo(obj) > 0) {
+                delete(atual.getEsquerda(), obj);
 
-            } else if (atual.getDados().compareTo(palavra) < 0) {
-                delete(atual.getDireita(), palavra);
+            } else if (atual.getDados().compareTo(obj) < 0) {
+                delete(atual.getDireita(), obj);
 
-            } else if (atual.getDados().equals(palavra)) {
+            } else if (atual.getDados().equals(obj)) {
                 removerNoEncontrado(atual);
             }
         }

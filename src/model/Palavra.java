@@ -1,14 +1,19 @@
 package model;
 
-public class Palavra implements Comparable{
+import util.*;
+
+public class Palavra implements Comparable {
+
     private String word;
     private int id;
+    private LinkedList paginas;
     private int relevancia;
-    
+
     public Palavra(String word) {
         this.word = word;
         this.id = 0;
         this.relevancia = 0;
+        paginas = new LinkedList();
     }
 
     public String getWord() {
@@ -35,24 +40,29 @@ public class Palavra implements Comparable{
         one = 1;
         this.relevancia = relevancia + one;
     }
-    
+
+    public LinkedList getPaginas() {
+        return paginas;
+    }
+
+    public void setPaginas(LinkedList paginas) {
+        this.paginas = paginas;
+    }
+
+    public void addPaginas(Pagina p) {
+        if (p != null) {
+            paginas.addLast(p);
+        }
+    }
+
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof Palavra){
-            Palavra palavra = (Palavra)obj;
-            if(word.equals(palavra.getWord())){
-                return true;
-            }
-            if(id == palavra.getId()){
-                return true;
-            }
-        }
-        return false;
+        return (this.word.equals(((Palavra) obj).getWord()));
     }
 
     @Override
     public String toString() {
-        return word+" ";
+        return word + " ";
     }
 
     @Override

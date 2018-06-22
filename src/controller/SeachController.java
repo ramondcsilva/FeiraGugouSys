@@ -30,8 +30,7 @@ public class SeachController {
         String linhaAtual = " ";
         int id = 0;
         Pagina pag = new Pagina(diretorio);
-        rank.addPaginas(pag);
-        //System.out.println("\n"+pag);
+        
         if(fArq.exists()){
             try{
                 FileReader fReader = new FileReader("C:\\Users\\ramon\\Downloads\\JAVA\\MI Programacao\\PBL3\\FeiraGugouSys\\src\\view\\txt\\"+diretorio);
@@ -43,7 +42,10 @@ public class SeachController {
                             Palavra p = new Palavra(linhaAtual.substring(0,linhaAtual.indexOf(" ")));
                             linhaAtual = linhaAtual.substring(linhaAtual.indexOf(" ")+1,linhaAtual.length());
                             p.setId(id++);
-                            pag.addPalavra(p);
+                            if(!rank.getPalavras().contem((Comparable)p)){
+                                rank.addPalavras(p);
+                                p.addPaginas(pag);
+                            }
                             //System.out.print(p+" ");
                         }
                     }
@@ -56,7 +58,7 @@ public class SeachController {
     
     //Verificar cast palavra e pagina para imprimir;
     public static void imprimeTexto(String palavra){
-        rank.getPaginas().printTree();
+        rank.getPalavras().printTree();
     }
     
     public static void imprimePalavra(int index){
