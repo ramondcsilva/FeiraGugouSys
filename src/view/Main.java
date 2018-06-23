@@ -24,15 +24,19 @@ import model.*;
 public class Main extends Application {
 
     private static int relevancia = 1;
-    private List<Palavra> list = new ArrayList();
-    private ObservableList<Palavra> observableListPalavras;
+    public List<Palavra> list = new ArrayList();
+    public List<Pagina> l = new ArrayList();
+    public ObservableList<Palavra> observableListPalavras;
+    public ObservableList<Pagina> observableListPaginas;
+    
+    public Main(){
+    }
     
     public static void main(String[] args) throws IOException {
         SearchController.carregaArquivos();
         launch(args);
     }
-    public Main(){
-    }
+    
     @Override
     public void start(Stage primaryStage) throws Exception {
 
@@ -56,11 +60,12 @@ public class Main extends Application {
             System.out.println("Foi achado: " + n);
             if(n != null && !observableListPalavras.contains(n)){
                 observableListPalavras.add(n);
+                l = (List<Pagina>) n.getPaginas();
             }else if(observableListPalavras.contains(n)){
                 int i = observableListPalavras.indexOf(n);
                 observableListPalavras.remove(i);
                 observableListPalavras.add(i,n);
-            }        
+            }
         });
         
         //Pesquisa usando a tecla enter;
@@ -88,43 +93,38 @@ public class Main extends Application {
 
         TableView table = new TableView();
         table.setEditable(true);
+        
         TableColumn tc = new TableColumn("Palavras");
+        tc.setMinWidth(100);
         tc.setCellValueFactory(new PropertyValueFactory<>("word"));
-        TableColumn tc1 = new TableColumn("Relevancia");
+        
+        TableColumn tc1 = new TableColumn("Relevância");
+        tc1.setMinWidth(90);
         tc1.setCellValueFactory(new PropertyValueFactory<>("relevancia"));
+        
+        TableColumn tc2 = new TableColumn("Paginas");
+        tc2.setMinWidth(190);
+        tc2.setCellValueFactory(new PropertyValueFactory<>("nome"));
+        
         observableListPalavras = FXCollections.observableArrayList(list);
         table.setItems(observableListPalavras);
         table.getColumns().addAll(tc,tc1);
-        vbox.getChildren().add(table);
+        
+        HBox h = new HBox();
+        
+        TableView table1 = new TableView();
+        table1.setEditable(true);
+        
+        h.getChildren().add(table1);
+        h.getChildren().add(table);
+        vbox.getChildren().add(h);
+        
+        observableListPaginas = FXCollections.observableArrayList(l);
+        table1.setItems(observableListPaginas);
+        table1.getColumns().addAll(tc2);
         
         primaryStage.setTitle("FeiraGugouSys");
         primaryStage.setScene(new Scene(vbox, 375, 375));
         primaryStage.show();
-        /////////////////////////////////////////////////////////////
-        /*
-        vbox.getChildren().add(new Label("       "));
-        vbox.getChildren().add(new Label("Buscador de Palavras"));
-        vbox.setAlignment(Pos.CENTER);
-            
-        HBox hboxcenter = new HBox(15, new Label("    Nome:"));
-        vbox.setAlignment(Pos.CENTER);
-        
-        TextField textt = new TextField();
-        text.setAlignment(Pos.CENTER);
-        
-        hboxcenter.getChildren().add(textt);
-        vbox.getChildren().add(hboxcenter);
-        
-        Button b0 = new Button("Pesquisar");
-        b0.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.println("Voce buscou: "+text.getText()); 
-                //Pagina n = (Pagina)SeachController.getRank().getPaginas().buscarObj(new Pagina(text.getText()+".txt"));
-                //System.out.println("Foi achado: "+n);
-            }
-        });
-        hboxcenter.getChildren().add(b0);
-         */
     }
 }

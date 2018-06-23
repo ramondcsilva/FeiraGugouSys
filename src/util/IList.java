@@ -5,6 +5,8 @@ public interface IList{
     
     public boolean contains(Object data);
     
+    public int indexOf(Object o);
+    
     public int size();
 
     public void addStart(Object o);
