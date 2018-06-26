@@ -10,7 +10,6 @@ import view.Main;
 
 public class SearchController {
     private static Ranking rank = new Ranking();
-    static Main main = new Main();
     
     public SearchController(){
     }
@@ -35,21 +34,24 @@ public class SearchController {
         
         if(fArq.exists()){
             try{
-                FileReader fReader = new FileReader("C:\\Users\\ramon\\Downloads\\JAVA\\MI Programacao\\PBL3\\FeiraGugouSys\\src\\view\\txt\\"+diretorio);
+                FileReader fReader = new FileReader("src/view/txt/"+diretorio);
                 BufferedReader rLeitor = new BufferedReader(fReader);
                 
                 while((linhaAtual=rLeitor.readLine())!= null){
                     if(linhaAtual.contains(" ")){
                         while(linhaAtual.contains(" ")){
+                            //[^A-Za-z0_-áàâãéèêíìóôõöúçñÁÀÂÃÉÈÊÍÌÓÔÕÖÚÇÑ\\s]
                             Palavra p = new Palavra(linhaAtual.substring(0,linhaAtual.indexOf(" ")));
                             linhaAtual = linhaAtual.substring(linhaAtual.indexOf(" ")+1,linhaAtual.length());
                             p.setId(id++);
+                            p.setWord(replacePalavra(p));
                             if(!rank.getPalavras().contem((Comparable)p)){
                                 if(!p.getPaginas().contains(pag)){
                                     p.addPaginas(pag);
                                 }else{
                                     int j = p.getPaginas().indexOf(p);
                                     Pagina pag1 = (Pagina)p.getPaginas().get(j);
+                                    pag1.setRelevancia(1);
                                 }
                                 rank.addPalavras(p);
                             }else{
@@ -69,20 +71,17 @@ public class SearchController {
         Palavra palavraRetornada = (Palavra)rank.getPalavras().buscarObj(p);
         if(palavraRetornada != null){
             palavraRetornada.setRelevancia(1);
-            palavraRetornada.getPaginas().printList();
-            System.out.println(palavraRetornada.getRelevancia());
-            for(int i = 0;  i < palavraRetornada.getPaginas().size(); i++){
-                Pagina pag = (Pagina)palavraRetornada.getPaginas().get(i);
-                if(!main.l.contains(pag)){
-                    System.out.println("passou");
-                    main.l.add(pag);
-                }
-            }
+            //palavraRetornada.getPaginas().printList();
+            //System.out.println(palavraRetornada.getRelevancia());
         }
         return palavraRetornada;
     }
     
     public static Ranking getRank() {
         return rank;
+    }
+    public static String replacePalavra(Palavra p){
+        String text = p.getWord();
+        return text.replaceAll("[^A-Za-z0-9_-áàâãéèêíìóôõöúçñÁÀÂÃÉÈÊÍÌÓÔÕÖÚÇÑ\\s]", "");
     }
 }
