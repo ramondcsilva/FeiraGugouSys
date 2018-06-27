@@ -6,6 +6,7 @@ import java.io.FileFilter;
 import java.io.FileReader;
 import java.io.IOException;
 import model.*;
+import util.LinkedList;
 import view.Main;
 
 public class SearchController {
@@ -27,7 +28,7 @@ public class SearchController {
     } 
     
     public static void guardaPalavras(String diretorio){
-        File fArq = new File("C:\\Users\\ramon\\Downloads\\JAVA\\MI Programacao\\PBL3\\FeiraGugouSys\\src\\view\\txt\\"+diretorio);
+        File fArq = new File("src/view/txt/"+diretorio);
         String linhaAtual = " ";
         int id = 0;
         Pagina pag = new Pagina(diretorio);
@@ -65,6 +66,27 @@ public class SearchController {
                 System.out.println("Houve erros!: "+eEx);
             }
         }
+    }
+    
+    public static LinkedList imprimeTxt(String diretorio){
+        File fArq = new File("src/view/txt/"+diretorio);
+        String linhaAtual = " ";
+        LinkedList listaTxt = new LinkedList();
+        
+        if(fArq.exists()){
+            try{
+                FileReader fReader = new FileReader("src/view/txt/"+diretorio);
+                BufferedReader rLeitor = new BufferedReader(fReader);
+
+                while((linhaAtual=rLeitor.readLine())!= null){
+                    listaTxt.addLast(linhaAtual);
+                    //System.out.println(linhaAtual);
+                }    
+            }catch(IOException eEx){
+                System.out.println("Houve erros!: "+eEx);
+            }
+        }
+        return listaTxt;
     }
     
     public static Palavra search(Palavra p){

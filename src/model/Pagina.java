@@ -1,9 +1,14 @@
 package model;
 
+import java.util.Objects;
+
 public class Pagina implements Comparable{
     private String nome;
     private int relevancia;
     
+    public Pagina(){
+    }
+
     public Pagina(String nome){
         this.nome = nome;
         relevancia  = 0;
@@ -24,10 +29,29 @@ public class Pagina implements Comparable{
     public void setRelevancia(int relevance) {
         this.relevancia = relevancia + relevance;
     }
-    
-    public boolean equals(Object obj){
-        return (this.nome.equals(((Pagina) obj).getNome()));
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Pagina other = (Pagina) obj;
+        if (this.relevancia != other.relevancia) {
+            return false;
+        }
+        if (!Objects.equals(this.nome, other.nome)) {
+            return false;
+        }
+        return true;
     }
+    
+    
 
     @Override
     public String toString() {
