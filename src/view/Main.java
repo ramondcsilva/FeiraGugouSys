@@ -1,13 +1,18 @@
 package view;
 
 import controller.SearchController;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -24,21 +29,24 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableView.TableViewSelectionModel;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.*;
-import util.LinkedList;
+import java.util.LinkedList;
 
 public class Main extends Application {
 
-    public List<Palavra> ALpalavras = new ArrayList();
-    public List<Pagina> ALpaginas = new ArrayList();
+    public List<Palavra> alPalavras = new ArrayList();
+    public List<Pagina> alPaginas = new ArrayList();
+    public List<Pagina> alPaginasBuscadas = new ArrayList();
     public ObservableList<Palavra> observableListPalavras;
     public ObservableList<Pagina> observableListPaginas;
-
+    public ObservableList<Pagina> observableListPaginasBuscadas;
+    
     public Main() {
     }
 
@@ -66,7 +74,7 @@ public class Main extends Application {
         hboxLabel.getChildren().add(tfPalavras);
         vboxPesquisa.getChildren().add(hboxLabel);
 
-        observableListPalavras = FXCollections.observableArrayList(ALpalavras);
+        observableListPalavras = FXCollections.observableArrayList(alPalavras);
 
         //Pesuisa usando um botao;
         Button bPesquisar = new Button("Pesquisar");
@@ -78,13 +86,13 @@ public class Main extends Application {
                 observableListPalavras.add(n);
                 for (int i = 0; i < n.getPaginas().size(); i++) {
                     Pagina pag = (Pagina) n.getPaginas().get(i);
-                    if (!ALpaginas.contains(pag)) {
-                        ALpaginas.add(pag);
-                        pag.setRelevancia(1);
+                    if(!alPaginas.contains(pag)) {
+                        alPaginas.add(pag);
+                        //pag.setRelevancia(1);
                     } else {
                         int index = n.getPaginas().indexOf(pag);
                         Pagina pagRetorno = (Pagina) n.getPaginas().get(index);
-                        pagRetorno.setRelevancia(1);
+                        //pagRetorno.setRelevancia(1);
                     }
                 }
             } else if (observableListPalavras.contains(n)) {
@@ -100,7 +108,7 @@ public class Main extends Application {
 
             Stage stage = new Stage();
             stage.setScene(null);
-
+            
             TableView tvPaginas = new TableView();
 
             HBox hboxRaking = new HBox();
@@ -113,14 +121,16 @@ public class Main extends Application {
             tcPaginas.setCellValueFactory(new PropertyValueFactory<>("nome"));
 
             TableColumn tcRelevanciaPagina = new TableColumn("R");
+            tcRelevanciaPagina.setSortType(TableColumn.SortType.DESCENDING);
             tcRelevanciaPagina.setMaxWidth(37);
             tcRelevanciaPagina.setMinWidth(37);
             tcRelevanciaPagina.setCellValueFactory(new PropertyValueFactory<>("relevancia"));
 
-            observableListPaginas = FXCollections.observableArrayList(ALpaginas);
+            observableListPaginas = FXCollections.observableArrayList(alPaginas);
             tvPaginas.setItems(observableListPaginas);
             tvPaginas.getColumns().addAll(tcPaginas, tcRelevanciaPagina);
-
+            tvPaginas.getSortOrder().add(tcRelevanciaPagina);
+            
             TableView tvPalavras = new TableView();
             tvPalavras.setEditable(true);
 
@@ -130,13 +140,15 @@ public class Main extends Application {
             tcPalavras.setCellValueFactory(new PropertyValueFactory<>("word"));
 
             TableColumn tcRelevancia = new TableColumn("R");
+            tcRelevancia.setSortType(TableColumn.SortType.DESCENDING);
             tcRelevancia.setMaxWidth(37);
             tcRelevancia.setMinWidth(37);
             tcRelevancia.setCellValueFactory(new PropertyValueFactory<>("relevancia"));
 
             tvPalavras.setItems(observableListPalavras);
             tvPalavras.getColumns().addAll(tcPalavras, tcRelevancia);
-
+            tvPalavras.getSortOrder().add(tcRelevancia);
+            
             hboxRaking.getChildren().addAll(boxPagina, boxPalavras);
             boxPalavras.getChildren().add(tvPalavras);
             boxPagina.getChildren().addAll(tvPaginas);
@@ -151,74 +163,79 @@ public class Main extends Application {
                         TablePosition tablePosition = (TablePosition) selectedCells.get(0);
                         Object val = tablePosition.getTableColumn().getCellData(newValue);
                         System.out.println("Selected Value: " + val);
-                        LinkedList textRetorno = SearchController.imprimeTxt((String) val);
                         LinkedList arqEdit = new LinkedList();
-                        
+
+                        String textRetorno = "";
+                        try {
+                            textRetorno = SearchController.imprimeTxt((String) val);
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+
                         Stage text = new Stage();
                         HBox hboxText = new HBox();
-                        
-                        VBox vboxSelection = new VBox(20);
+
+                        VBox vboxSelection = new VBox();
                         vboxSelection.setMinSize(150, 400);
                         vboxSelection.setMaxSize(150, 400);
-                        
-                        TextField tfText = new TextField();
-                        tfText.setAlignment(Pos.TOP_LEFT);
+
+                        TextArea tfText = new TextArea();
                         tfText.setPrefSize(450, 400);
                         tfText.setEditable(false);
-                        
+
                         Button bEditar = new Button("Editar");
                         bEditar.setAlignment(Pos.CENTER);
                         bEditar.setOnAction((ActionEvent event) -> {
                             tfText.setEditable(true);
                         });
-                        
+
                         Button bCancelar = new Button("Cancelar");
                         bCancelar.setAlignment(Pos.CENTER);
                         bCancelar.setOnAction((ActionEvent event) -> {
                             tfText.setEditable(false);
                         });
-                        
+
                         Button bSalvar = new Button("Salvar");
                         bSalvar.setAlignment(Pos.CENTER);
                         bSalvar.setOnAction((ActionEvent event) -> {
                             String textF = tfText.getText();
-                            System.out.println("textF");
-                            arqEdit.addLast(textF);
+                            System.out.println(textF);
 
-                            FileOutputStream arquivo;
-                            File arqDeletar;
+                            InputStream is;
                             try {
-                                arqDeletar = new File((String)val);
-                                arqDeletar.delete();
+                                is = new FileInputStream("src/view/txt/"+val);
+                                OutputStream os = new FileOutputStream("src/view/txt/novo.txt");
+                                OutputStreamWriter osw = new OutputStreamWriter(os);
+                                BufferedWriter bw = new BufferedWriter(osw);
+                                Scanner entrada = new Scanner(is);
                                 
-                                File arqNovo = new File((String)val);
-                                arquivo = new FileOutputStream((String)val);
+                                bw.write(textF);
+
+                                File arquivo = new File("src/view/txt/novo.txt");
+                                arquivo.renameTo(new File("src/view/txt/"+val));
+                                //ta grava em outro arquivo. agora saber como renomear;
+                                bw.close();
+                                entrada.close();
                                 
-                                try (PrintWriter n = new PrintWriter(arquivo)) {
-                                    while (!arqEdit.isEmpty()) {
-                                        String retornoTexto = (String) arqEdit.toRemoveStart();
-                                        System.out.println(retornoTexto);
-                                        n.print(retornoTexto);
-                                    }
-                                }
-                                arquivo.close();
-                                SearchController.carregaArquivos();
                             } catch (FileNotFoundException ex) {
                                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                             } catch (IOException ex) {
                                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                             }
+                            SearchController.carregaArquivos();
                         });
-                        
-                        while (!textRetorno.isEmpty()) {
-                            String retornoTexto = (String) textRetorno.toRemoveStart();
-                            //System.out.println(retornoTexto);
-                            tfText.setText(retornoTexto);
-                        }
-                        
-                        vboxSelection.getChildren().addAll(bEditar,bCancelar,bSalvar);
-                        hboxText.getChildren().addAll(tfText,vboxSelection);
-                        
+                        tfText.setText(textRetorno);
+
+                        HBox vEditar = new HBox(30);
+                        HBox vCancelar = new HBox(30);
+                        HBox vSalvar = new HBox(30);
+                        vEditar.getChildren().addAll(new Label(" "), bEditar);
+                        vCancelar.getChildren().addAll(new Label(" "), bCancelar);
+                        vSalvar.getChildren().addAll(new Label(" "), bSalvar);
+
+                        vboxSelection.getChildren().addAll(vEditar, vCancelar, vSalvar);
+                        hboxText.getChildren().addAll(tfText, vboxSelection);
+
                         text.setTitle("Editor");
                         text.setScene(new Scene(hboxText, 600, 400));
                         text.show();
@@ -231,12 +248,6 @@ public class Main extends Application {
             stageRaking.setScene(stage.getScene());
             stageRaking.setResizable(false);
             stageRaking.show();
-
-            for (int i = 0; i < ALpaginas.size(); i++) {
-                Pagina p = (Pagina) ALpaginas.get(i);
-                System.out.print(p + " ");
-                System.out.println(p.getRelevancia());
-            }
         });
 
         //Pesquisa usando a tecla enter;
@@ -244,17 +255,20 @@ public class Main extends Application {
             System.out.println("Voce buscou: " + tfPalavras.getText());
             Palavra n = SearchController.search(new Palavra(tfPalavras.getText()));
             System.out.println("Foi achado: " + n);
+            alPaginasBuscadas.clear();
+            //Adiciona palavras nas listas; 
             if (n != null && !observableListPalavras.contains(n)) {
                 observableListPalavras.add(n);
                 for (int i = 0; i < n.getPaginas().size(); i++) {
                     Pagina pag = (Pagina) n.getPaginas().get(i);
-                    if (!ALpaginas.contains(pag)) {
-                        ALpaginas.add(pag);
+                    if (!alPaginas.contains(pag)) {
                         pag.setRelevancia(1);
+                        alPaginas.add(pag);
                     } else {
                         int index = n.getPaginas().indexOf(pag);
-                        Pagina pagRetorno = (Pagina) n.getPaginas().get(index);
+                        Pagina pagRetorno = (Pagina) n.getPaginas().remove(index);
                         pagRetorno.setRelevancia(1);
+                        n.getPaginas().add(index, pagRetorno);
                     }
                 }
             } else if (observableListPalavras.contains(n)) {
@@ -262,6 +276,17 @@ public class Main extends Application {
                 Palavra palavraRetorno = (Palavra) observableListPalavras.remove(i);
                 observableListPalavras.add(i, palavraRetorno);
             }
+            
+            //Lista de paginas encontradas
+            if (n != null) {
+                for (int i = 0; i < n.getPaginas().size(); i++) {
+                    Pagina pag = (Pagina) n.getPaginas().get(i);
+                    if (!alPaginasBuscadas.contains(pag)) {
+                        alPaginasBuscadas.add(pag);
+                    }
+                }
+            }
+            
             Stage stage = new Stage();
             stage.setScene(null);
             TableView tvPaginas = new TableView();
@@ -270,38 +295,22 @@ public class Main extends Application {
             HBox boxPagina = new HBox();
             HBox boxPalavras = new HBox();
 
-            TableColumn tcPaginas = new TableColumn("Paginas");
-            tcPaginas.setMaxWidth(136);
-            tcPaginas.setMinWidth(136);
+            TableColumn tcPaginas = new TableColumn("Paginas encontradas");
+            /////////////////////////////////////
+            tcPaginas.setSortType(TableColumn.SortType.ASCENDING);
+            
+            tcPaginas.setMaxWidth(383);
+            tcPaginas.setMinWidth(383);
             tcPaginas.setCellValueFactory(new PropertyValueFactory<>("nome"));
 
-            TableColumn tcRelevanciaPagina = new TableColumn("R");
-            tcRelevanciaPagina.setMaxWidth(37);
-            tcRelevanciaPagina.setMinWidth(37);
-            tcRelevanciaPagina.setCellValueFactory(new PropertyValueFactory<>("relevancia"));
-
-            observableListPaginas = FXCollections.observableArrayList(ALpaginas);
-            tvPaginas.setItems(observableListPaginas);
-            tvPaginas.getColumns().addAll(tcPaginas, tcRelevanciaPagina);
-
-            TableView tvPalavras = new TableView();
-            tvPalavras.setEditable(true);
-
-            TableColumn tcPalavras = new TableColumn("Palavras");
-            tcPalavras.setMaxWidth(136);
-            tcPalavras.setMinWidth(136);
-            tcPalavras.setCellValueFactory(new PropertyValueFactory<>("word"));
-
-            TableColumn tcRelevancia = new TableColumn("R");
-            tcRelevancia.setMaxWidth(37);
-            tcRelevancia.setMinWidth(37);
-            tcRelevancia.setCellValueFactory(new PropertyValueFactory<>("relevancia"));
-
-            tvPalavras.setItems(observableListPalavras);
-            tvPalavras.getColumns().addAll(tcPalavras, tcRelevancia);
-
-            hboxRaking.getChildren().addAll(boxPagina, boxPalavras);
-            boxPalavras.getChildren().add(tvPalavras);
+            observableListPaginasBuscadas = FXCollections.observableArrayList(alPaginasBuscadas);
+            tvPaginas.setItems(observableListPaginasBuscadas);
+            tvPaginas.getColumns().addAll(tcPaginas);
+            
+            ///////////////////////////////////
+            tvPaginas.getSortOrder().add(tcPaginas);
+            
+            hboxRaking.getChildren().addAll(boxPagina);
             boxPagina.getChildren().addAll(tvPaginas);
 
             tvPaginas.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
@@ -314,14 +323,15 @@ public class Main extends Application {
                         TablePosition tablePosition = (TablePosition) selectedCells.get(0);
                         Object val = tablePosition.getTableColumn().getCellData(newValue);
                         System.out.println("Selected Value: " + val);
-                        SearchController.imprimeTxt((String) val);
+                        //SearchController.imprimeTxt((String) val);
                     }
                 }
             });
 
-            stage.setTitle("Raking");
+            stageRaking.setTitle("FeiraGugou");
             stage.setScene(new Scene(hboxRaking, 375, 375));
             stageRaking.setScene(stage.getScene());
+            stageRaking.setResizable(false);
             stageRaking.show();
         });
 
@@ -341,7 +351,7 @@ public class Main extends Application {
         vboxPesquisa.getChildren().add(hboxTV);
         hboxPesquisa.getChildren().add(vboxPesquisa);
 
-        primaryStage.setTitle("FeiraGugouSys");
+        primaryStage.setTitle("FeiraGugou");
         primaryStage.setScene(new Scene(hboxPesquisa, 375, 150));
         primaryStage.setResizable(false);
         primaryStage.show();

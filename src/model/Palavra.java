@@ -1,6 +1,6 @@
 package model;
 
-import util.*;
+import java.util.LinkedList;
 
 public class Palavra implements Comparable {
 

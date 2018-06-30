@@ -6,8 +6,6 @@ import java.io.FileFilter;
 import java.io.FileReader;
 import java.io.IOException;
 import model.*;
-import util.LinkedList;
-import view.Main;
 
 public class SearchController {
     private static Ranking rank = new Ranking();
@@ -68,33 +66,26 @@ public class SearchController {
         }
     }
     
-    public static LinkedList imprimeTxt(String diretorio){
+    public static String imprimeTxt(String diretorio) throws IOException{
         File fArq = new File("src/view/txt/"+diretorio);
-        String linhaAtual = " ";
-        LinkedList listaTxt = new LinkedList();
+        String linhaAtual = "";
+        String retornoTexto = "";
         
         if(fArq.exists()){
-            try{
-                FileReader fReader = new FileReader("src/view/txt/"+diretorio);
-                BufferedReader rLeitor = new BufferedReader(fReader);
-
-                while((linhaAtual=rLeitor.readLine())!= null){
-                    listaTxt.addLast(linhaAtual);
-                    //System.out.println(linhaAtual);
-                }    
-            }catch(IOException eEx){
-                System.out.println("Houve erros!: "+eEx);
-            }
+            FileReader fReader = new FileReader("src/view/txt/"+diretorio);
+            BufferedReader rLeitor = new BufferedReader(fReader);
+            
+            while((linhaAtual=rLeitor.readLine())!= null){
+                retornoTexto += linhaAtual+"\n";
+            }    
         }
-        return listaTxt;
+        return retornoTexto;
     }
     
     public static Palavra search(Palavra p){
         Palavra palavraRetornada = (Palavra)rank.getPalavras().buscarObj(p);
         if(palavraRetornada != null){
             palavraRetornada.setRelevancia(1);
-            //palavraRetornada.getPaginas().printList();
-            //System.out.println(palavraRetornada.getRelevancia());
         }
         return palavraRetornada;
     }
