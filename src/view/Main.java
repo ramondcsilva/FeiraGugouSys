@@ -1,18 +1,9 @@
 package view;
 
 import controller.SearchController;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -36,7 +27,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.*;
-import java.util.LinkedList;
 
 public class Main extends Application {
 
@@ -163,72 +153,60 @@ public class Main extends Application {
                         TablePosition tablePosition = (TablePosition) selectedCells.get(0);
                         Object val = tablePosition.getTableColumn().getCellData(newValue);
                         System.out.println("Selected Value: " + val);
-                        LinkedList arqEdit = new LinkedList();
 
                         String textRetorno = "";
                         try {
                             textRetorno = SearchController.imprimeTxt((String) val);
                         } catch (IOException ex) {
-                            ex.printStackTrace();
                         }
 
                         Stage text = new Stage();
                         HBox hboxText = new HBox();
-
-                        VBox vboxSelection = new VBox();
-                        vboxSelection.setMinSize(150, 400);
-                        vboxSelection.setMaxSize(150, 400);
+                        
+                        VBox vboxSelection = new VBox(10,new Label(" "));
+                        vboxSelection.setMinSize(100, 400);
+                        vboxSelection.setMaxSize(100, 400);
 
                         TextArea tfText = new TextArea();
                         tfText.setPrefSize(450, 400);
                         tfText.setEditable(false);
-
+                        tfText.setText(textRetorno);
+                        
+                        String guardaTA = tfText.getText();
+                        
                         Button bEditar = new Button("Editar");
-                        bEditar.setAlignment(Pos.CENTER);
+                        bEditar.setMaxSize(70, 30);
+                        bEditar.setMinSize(70, 30);
                         bEditar.setOnAction((ActionEvent event) -> {
                             tfText.setEditable(true);
                         });
 
                         Button bCancelar = new Button("Cancelar");
-                        bCancelar.setAlignment(Pos.CENTER);
+                        bCancelar.setMaxSize(70, 30);
+                        bCancelar.setMinSize(70, 30);
                         bCancelar.setOnAction((ActionEvent event) -> {
+                            tfText.setText(guardaTA);
                             tfText.setEditable(false);
                         });
 
                         Button bSalvar = new Button("Salvar");
-                        bSalvar.setAlignment(Pos.CENTER);
+                        bSalvar.setMaxSize(70, 30);
+                        bSalvar.setMinSize(70, 30);
                         bSalvar.setOnAction((ActionEvent event) -> {
                             String textF = tfText.getText();
+                            String dir = "src/view/txt/"+ (String)val;
                             System.out.println(textF);
-
-                            InputStream is;
                             try {
-                                is = new FileInputStream("src/view/txt/"+val);
-                                OutputStream os = new FileOutputStream("src/view/txt/novo.txt");
-                                OutputStreamWriter osw = new OutputStreamWriter(os);
-                                BufferedWriter bw = new BufferedWriter(osw);
-                                Scanner entrada = new Scanner(is);
-                                
-                                bw.write(textF);
-
-                                File arquivo = new File("src/view/txt/novo.txt");
-                                arquivo.renameTo(new File("src/view/txt/"+val));
-                                //ta grava em outro arquivo. agora saber como renomear;
-                                bw.close();
-                                entrada.close();
-                                
-                            } catch (FileNotFoundException ex) {
-                                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                                SearchController.salvarArq(dir, textF);
+                                SearchController.carregaArquivos();
                             } catch (IOException ex) {
                                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                            SearchController.carregaArquivos();
                         });
-                        tfText.setText(textRetorno);
 
-                        HBox vEditar = new HBox(30);
-                        HBox vCancelar = new HBox(30);
-                        HBox vSalvar = new HBox(30);
+                        HBox vEditar = new HBox(10);
+                        HBox vCancelar = new HBox(10);
+                        HBox vSalvar = new HBox(10);
                         vEditar.getChildren().addAll(new Label(" "), bEditar);
                         vCancelar.getChildren().addAll(new Label(" "), bCancelar);
                         vSalvar.getChildren().addAll(new Label(" "), bSalvar);
@@ -237,7 +215,7 @@ public class Main extends Application {
                         hboxText.getChildren().addAll(tfText, vboxSelection);
 
                         text.setTitle("Editor");
-                        text.setScene(new Scene(hboxText, 600, 400));
+                        text.setScene(new Scene(hboxText, 500, 350));
                         text.show();
                     }
                 }
@@ -296,7 +274,6 @@ public class Main extends Application {
             HBox boxPalavras = new HBox();
 
             TableColumn tcPaginas = new TableColumn("Paginas encontradas");
-            /////////////////////////////////////
             tcPaginas.setSortType(TableColumn.SortType.ASCENDING);
             
             tcPaginas.setMaxWidth(383);
@@ -306,8 +283,6 @@ public class Main extends Application {
             observableListPaginasBuscadas = FXCollections.observableArrayList(alPaginasBuscadas);
             tvPaginas.setItems(observableListPaginasBuscadas);
             tvPaginas.getColumns().addAll(tcPaginas);
-            
-            ///////////////////////////////////
             tvPaginas.getSortOrder().add(tcPaginas);
             
             hboxRaking.getChildren().addAll(boxPagina);
@@ -323,7 +298,70 @@ public class Main extends Application {
                         TablePosition tablePosition = (TablePosition) selectedCells.get(0);
                         Object val = tablePosition.getTableColumn().getCellData(newValue);
                         System.out.println("Selected Value: " + val);
-                        //SearchController.imprimeTxt((String) val);
+
+                        String textRetorno = "";
+                        try {
+                            textRetorno = SearchController.imprimeTxt((String) val);
+                        } catch (IOException ex) {
+                        }
+
+                        Stage text = new Stage();
+                        HBox hboxText = new HBox();
+                        
+                        VBox vboxSelection = new VBox(10,new Label(" "));
+                        vboxSelection.setMinSize(100, 400);
+                        vboxSelection.setMaxSize(100, 400);
+
+                        TextArea tfText = new TextArea();
+                        tfText.setPrefSize(450, 400);
+                        tfText.setEditable(false);
+                        tfText.setText(textRetorno);
+                        
+                        String guardaTA = tfText.getText();
+                        
+                        Button bEditar = new Button("Editar");
+                        bEditar.setMaxSize(70, 30);
+                        bEditar.setMinSize(70, 30);
+                        bEditar.setOnAction((ActionEvent event) -> {
+                            tfText.setEditable(true);
+                        });
+
+                        Button bCancelar = new Button("Cancelar");
+                        bCancelar.setMaxSize(70, 30);
+                        bCancelar.setMinSize(70, 30);
+                        bCancelar.setOnAction((ActionEvent event) -> {
+                            tfText.setText(guardaTA);
+                            tfText.setEditable(false);
+                        });
+
+                        Button bSalvar = new Button("Salvar");
+                        bSalvar.setMaxSize(70, 30);
+                        bSalvar.setMinSize(70, 30);
+                        bSalvar.setOnAction((ActionEvent event) -> {
+                            String textF = tfText.getText();
+                            String dir = "src/view/txt/"+ (String)val;
+                            System.out.println(textF);
+                            try {
+                                SearchController.salvarArq(dir, textF);
+                                SearchController.carregaArquivos();
+                            } catch (IOException ex) {
+                                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        });
+
+                        HBox vEditar = new HBox(10);
+                        HBox vCancelar = new HBox(10);
+                        HBox vSalvar = new HBox(10);
+                        vEditar.getChildren().addAll(new Label(" "), bEditar);
+                        vCancelar.getChildren().addAll(new Label(" "), bCancelar);
+                        vSalvar.getChildren().addAll(new Label(" "), bSalvar);
+
+                        vboxSelection.getChildren().addAll(vEditar, vCancelar, vSalvar);
+                        hboxText.getChildren().addAll(tfText, vboxSelection);
+
+                        text.setTitle("Editor");
+                        text.setScene(new Scene(hboxText, 500, 350));
+                        text.show();
                     }
                 }
             });
