@@ -182,7 +182,7 @@ public class Main extends Application {
                         bNovo.setMaxSize(70, 30);
                         bNovo.setMinSize(70, 30);
                         bNovo.setOnAction((ActionEvent event) -> {
-                            //Usar a sobreposição de eventos;
+                            
                         });
                         
                         Button bEditar = new Button("Editar");
@@ -222,7 +222,6 @@ public class Main extends Application {
                             String dir = "src/view/txt/"+ (String)val;
                             File arquivoDeletar = new File(dir);
                             arquivoDeletar.delete();
-                            
                         });
                         
                         HBox vEditar = new HBox(10);

@@ -15,7 +15,13 @@ public class Pagina implements Comparable{
         relevanciaPalavras  = 0;
         visitas = 0;
     }
-
+    
+    public Pagina(String nome, int relevanciaPalavras, int visitas){
+        this.nome = nome;
+        this.relevanciaPalavras  = relevanciaPalavras;
+        this.visitas = visitas;
+    }
+    
     public String getNome() {
         return nome;
     }

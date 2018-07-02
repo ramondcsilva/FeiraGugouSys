@@ -8,9 +8,21 @@ public class Palavra implements Comparable {
     private LinkedList paginas;
     private int relevancia;
 
+    public Palavra(){
+        this.word = "";
+        this.relevancia = 0;
+        paginas = new LinkedList();
+    }
+
     public Palavra(String word) {
         this.word = word;
         this.relevancia = 0;
+        paginas = new LinkedList();
+    }
+    
+    public Palavra(String word, int relevancia){
+        this.word = word;
+        this.relevancia = relevancia;
         paginas = new LinkedList();
     }
 
