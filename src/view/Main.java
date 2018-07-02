@@ -1,6 +1,7 @@
 package view;
 
 import controller.SearchController;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,11 +79,11 @@ public class Main extends Application {
                     Pagina pag = (Pagina) n.getPaginas().get(i);
                     if(!alPaginas.contains(pag)) {
                         alPaginas.add(pag);
-                        //pag.setRelevancia(1);
+                        pag.setRelevanciaPalavras(1);
                     } else {
                         int index = n.getPaginas().indexOf(pag);
                         Pagina pagRetorno = (Pagina) n.getPaginas().get(index);
-                        //pagRetorno.setRelevancia(1);
+                        pagRetorno.setRelevanciaPalavras(1);
                     }
                 }
             } else if (observableListPalavras.contains(n)) {
@@ -110,11 +111,11 @@ public class Main extends Application {
             tcPaginas.setMinWidth(136);
             tcPaginas.setCellValueFactory(new PropertyValueFactory<>("nome"));
 
-            TableColumn tcRelevanciaPagina = new TableColumn("R");
+            TableColumn tcRelevanciaPagina = new TableColumn("V");
             tcRelevanciaPagina.setSortType(TableColumn.SortType.DESCENDING);
             tcRelevanciaPagina.setMaxWidth(37);
             tcRelevanciaPagina.setMinWidth(37);
-            tcRelevanciaPagina.setCellValueFactory(new PropertyValueFactory<>("relevancia"));
+            tcRelevanciaPagina.setCellValueFactory(new PropertyValueFactory<>("visitas"));
 
             observableListPaginas = FXCollections.observableArrayList(alPaginas);
             tvPaginas.setItems(observableListPaginas);
@@ -148,6 +149,9 @@ public class Main extends Application {
                 public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
                     //Check whether item is selected and set value of selected item to Label
                     if (tvPaginas.getSelectionModel().getSelectedItem() != null) {
+                        Pagina paginaClicada = (Pagina) tvPaginas.getSelectionModel().getSelectedItem();
+                        paginaClicada.setVisitas(1);
+                        
                         TableViewSelectionModel selectionModel = tvPaginas.getSelectionModel();
                         ObservableList selectedCells = selectionModel.getSelectedCells();
                         TablePosition tablePosition = (TablePosition) selectedCells.get(0);
@@ -159,7 +163,7 @@ public class Main extends Application {
                             textRetorno = SearchController.imprimeTxt((String) val);
                         } catch (IOException ex) {
                         }
-
+                        
                         Stage text = new Stage();
                         HBox hboxText = new HBox();
                         
@@ -167,53 +171,73 @@ public class Main extends Application {
                         vboxSelection.setMinSize(100, 400);
                         vboxSelection.setMaxSize(100, 400);
 
-                        TextArea tfText = new TextArea();
-                        tfText.setPrefSize(450, 400);
-                        tfText.setEditable(false);
-                        tfText.setText(textRetorno);
+                        TextArea taText = new TextArea();
+                        taText.setPrefSize(450, 400);
+                        taText.setEditable(false);
+                        taText.setText(textRetorno);
                         
-                        String guardaTA = tfText.getText();
+                        String guardaTA = taText.getText();
+                        
+                        Button bNovo = new Button("Novo");
+                        bNovo.setMaxSize(70, 30);
+                        bNovo.setMinSize(70, 30);
+                        bNovo.setOnAction((ActionEvent event) -> {
+                            //Usar a sobreposição de eventos;
+                        });
                         
                         Button bEditar = new Button("Editar");
                         bEditar.setMaxSize(70, 30);
                         bEditar.setMinSize(70, 30);
                         bEditar.setOnAction((ActionEvent event) -> {
-                            tfText.setEditable(true);
+                            taText.setEditable(true);
                         });
 
                         Button bCancelar = new Button("Cancelar");
                         bCancelar.setMaxSize(70, 30);
                         bCancelar.setMinSize(70, 30);
                         bCancelar.setOnAction((ActionEvent event) -> {
-                            tfText.setText(guardaTA);
-                            tfText.setEditable(false);
+                            taText.setText(guardaTA);
+                            taText.setEditable(false);
                         });
 
                         Button bSalvar = new Button("Salvar");
                         bSalvar.setMaxSize(70, 30);
                         bSalvar.setMinSize(70, 30);
                         bSalvar.setOnAction((ActionEvent event) -> {
-                            String textF = tfText.getText();
+                            String textF = taText.getText();
                             String dir = "src/view/txt/"+ (String)val;
                             System.out.println(textF);
                             try {
                                 SearchController.salvarArq(dir, textF);
-                                SearchController.carregaArquivos();
                             } catch (IOException ex) {
                                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         });
-
+                        
+                        Button bRemover = new Button("Deletar");
+                        bRemover.setMaxSize(70, 30);
+                        bRemover.setMinSize(70, 30);
+                        bRemover.setOnAction((ActionEvent event) -> {
+                            //DELETAR corretamente;
+                            String dir = "src/view/txt/"+ (String)val;
+                            File arquivoDeletar = new File(dir);
+                            arquivoDeletar.delete();
+                            
+                        });
+                        
                         HBox vEditar = new HBox(10);
                         HBox vCancelar = new HBox(10);
                         HBox vSalvar = new HBox(10);
+                        HBox vRemover = new HBox(10);
+                        HBox vNovo = new HBox(10);
                         vEditar.getChildren().addAll(new Label(" "), bEditar);
                         vCancelar.getChildren().addAll(new Label(" "), bCancelar);
                         vSalvar.getChildren().addAll(new Label(" "), bSalvar);
-
-                        vboxSelection.getChildren().addAll(vEditar, vCancelar, vSalvar);
-                        hboxText.getChildren().addAll(tfText, vboxSelection);
-
+                        vRemover.getChildren().addAll(new Label(" "), bRemover);
+                        vNovo.getChildren().addAll(new Label(" "), bNovo);
+                        
+                        vboxSelection.getChildren().addAll(vNovo, vEditar, vCancelar, vSalvar, vRemover);
+                        hboxText.getChildren().addAll(taText, vboxSelection);
                         text.setTitle("Editor");
                         text.setScene(new Scene(hboxText, 500, 350));
                         text.show();
@@ -240,12 +264,12 @@ public class Main extends Application {
                 for (int i = 0; i < n.getPaginas().size(); i++) {
                     Pagina pag = (Pagina) n.getPaginas().get(i);
                     if (!alPaginas.contains(pag)) {
-                        pag.setRelevancia(1);
+                        pag.setRelevanciaPalavras(1);
                         alPaginas.add(pag);
                     } else {
                         int index = n.getPaginas().indexOf(pag);
                         Pagina pagRetorno = (Pagina) n.getPaginas().remove(index);
-                        pagRetorno.setRelevancia(1);
+                        pagRetorno.setRelevanciaPalavras(1);
                         n.getPaginas().add(index, pagRetorno);
                     }
                 }
@@ -271,19 +295,24 @@ public class Main extends Application {
 
             HBox hboxRaking = new HBox();
             HBox boxPagina = new HBox();
-            HBox boxPalavras = new HBox();
 
             TableColumn tcPaginas = new TableColumn("Paginas encontradas");
-            tcPaginas.setSortType(TableColumn.SortType.ASCENDING);
             
-            tcPaginas.setMaxWidth(383);
-            tcPaginas.setMinWidth(383);
+            tcPaginas.setMaxWidth(344);
+            tcPaginas.setMinWidth(344);
             tcPaginas.setCellValueFactory(new PropertyValueFactory<>("nome"));
 
+            TableColumn tcRelevancia = new TableColumn("R");
+            tcRelevancia.setSortType(TableColumn.SortType.DESCENDING);
+            
+            tcRelevancia.setMaxWidth(37);
+            tcRelevancia.setMinWidth(37);
+            tcRelevancia.setCellValueFactory(new PropertyValueFactory<>("relevanciaPalavras"));
+            
             observableListPaginasBuscadas = FXCollections.observableArrayList(alPaginasBuscadas);
             tvPaginas.setItems(observableListPaginasBuscadas);
-            tvPaginas.getColumns().addAll(tcPaginas);
-            tvPaginas.getSortOrder().add(tcPaginas);
+            tvPaginas.getColumns().addAll(tcPaginas,tcRelevancia);
+            tvPaginas.getSortOrder().add(tcRelevancia);
             
             hboxRaking.getChildren().addAll(boxPagina);
             boxPagina.getChildren().addAll(tvPaginas);
@@ -293,16 +322,20 @@ public class Main extends Application {
                 public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
                     //Check whether item is selected and set value of selected item to Label
                     if (tvPaginas.getSelectionModel().getSelectedItem() != null) {
+                        Pagina paginaClicada = (Pagina) tvPaginas.getSelectionModel().getSelectedItem();
+                        paginaClicada.setVisitas(1);
+                        
                         TableViewSelectionModel selectionModel = tvPaginas.getSelectionModel();
                         ObservableList selectedCells = selectionModel.getSelectedCells();
                         TablePosition tablePosition = (TablePosition) selectedCells.get(0);
                         Object val = tablePosition.getTableColumn().getCellData(newValue);
                         System.out.println("Selected Value: " + val);
-
+                        
                         String textRetorno = "";
                         try {
                             textRetorno = SearchController.imprimeTxt((String) val);
                         } catch (IOException ex) {
+                            
                         }
 
                         Stage text = new Stage();
@@ -316,7 +349,7 @@ public class Main extends Application {
                         tfText.setPrefSize(450, 400);
                         tfText.setEditable(false);
                         tfText.setText(textRetorno);
-                        
+
                         String guardaTA = tfText.getText();
                         
                         Button bEditar = new Button("Editar");

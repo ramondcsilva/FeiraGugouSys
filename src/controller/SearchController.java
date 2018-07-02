@@ -4,17 +4,12 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import model.*;
 
 public class SearchController {
-
     private static Ranking rank = new Ranking();
 
     public SearchController() {
@@ -23,7 +18,7 @@ public class SearchController {
     public static void carregaArquivos() {
         FileFilter filter = (File file) -> file.getName().endsWith(".txt");
 
-        File file = new File("C:\\Users\\ramon\\Downloads\\JAVA\\MI Programacao\\PBL3\\FeiraGugouSys\\src\\view\\txt");
+        File file = new File("src/view/txt");
         File afile[] = file.listFiles(filter);
         int i = 0;
         for (int j = afile.length; i < j; i++) {
@@ -35,7 +30,6 @@ public class SearchController {
     public static void guardaPalavras(String diretorio) {
         File fArq = new File("src/view/txt/" + diretorio);
         String linhaAtual = " ";
-        int id = 0;
         Pagina pag = new Pagina(diretorio);
 
         if (fArq.exists()) {
@@ -46,10 +40,8 @@ public class SearchController {
                 while ((linhaAtual = rLeitor.readLine()) != null) {
                     if (linhaAtual.contains(" ")) {
                         while (linhaAtual.contains(" ")) {
-                            //[^A-Za-z0_-áàâãéèêíìóôõöúçñÁÀÂÃÉÈÊÍÌÓÔÕÖÚÇÑ\\s]
                             Palavra p = new Palavra(linhaAtual.substring(0, linhaAtual.indexOf(" ")));
                             linhaAtual = linhaAtual.substring(linhaAtual.indexOf(" ") + 1, linhaAtual.length());
-                            p.setId(id++);
                             p.setWord(replacePalavra(p));
                             if (!rank.getPalavras().contem((Comparable) p)) {
                                 if (!p.getPaginas().contains(pag)) {
@@ -57,7 +49,7 @@ public class SearchController {
                                 } else {
                                     int j = p.getPaginas().indexOf(p);
                                     Pagina pag1 = (Pagina) p.getPaginas().get(j);
-                                    pag1.setRelevancia(1);
+                                    pag1.setRelevanciaPalavras(1);
                                 }
                                 rank.addPalavras(p);
                             } else {
@@ -109,10 +101,16 @@ public class SearchController {
     public static void salvarArq(String dir,String text) throws IOException{
         FileWriter arqSaida = new FileWriter(dir);
         BufferedWriter arquivo = new BufferedWriter(arqSaida);
-
+        
+        arquivo.write("");
+        arquivo.flush();
+        arquivo.close();
+        
+        arqSaida = new FileWriter(dir,true);
+        arquivo = new BufferedWriter(arqSaida);
+       
         arquivo.write(text);
-
         arquivo.flush();
         arquivo.close();
     }
-}
+}    

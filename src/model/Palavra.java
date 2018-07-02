@@ -5,13 +5,11 @@ import java.util.LinkedList;
 public class Palavra implements Comparable {
 
     private String word;
-    private int id;
     private LinkedList paginas;
     private int relevancia;
 
     public Palavra(String word) {
         this.word = word;
-        this.id = 0;
         this.relevancia = 0;
         paginas = new LinkedList();
     }
@@ -22,14 +20,6 @@ public class Palavra implements Comparable {
 
     public void setWord(String word) {
         this.word = word;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public int getRelevancia() {

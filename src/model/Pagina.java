@@ -4,14 +4,16 @@ import java.util.Objects;
 
 public class Pagina implements Comparable{
     private String nome;
-    private int relevancia;
+    private int relevanciaPalavras;
+    private int visitas;
     
     public Pagina(){
     }
 
     public Pagina(String nome){
         this.nome = nome;
-        relevancia  = 0;
+        relevanciaPalavras  = 0;
+        visitas = 0;
     }
 
     public String getNome() {
@@ -22,12 +24,20 @@ public class Pagina implements Comparable{
         this.nome = nome;
     }
     
-    public int getRelevancia() {
-        return relevancia;
+    public int getRelevanciaPalavras() {
+        return relevanciaPalavras;
     }
 
-    public void setRelevancia(int relevance) {
-        this.relevancia = relevancia + relevance;
+    public void setRelevanciaPalavras(int relevance) {
+        this.relevanciaPalavras = relevanciaPalavras + relevance;
+    }
+
+    public int getVisitas() {
+        return visitas;
+    }
+
+    public void setVisitas(int visit) {
+        this.visitas = visitas + visit;
     }
 
     @Override
@@ -42,7 +52,10 @@ public class Pagina implements Comparable{
             return false;
         }
         final Pagina other = (Pagina) obj;
-        if (this.relevancia != other.relevancia) {
+        if (this.relevanciaPalavras != other.relevanciaPalavras) {
+            return false;
+        }
+        if (this.visitas != other.visitas) {
             return false;
         }
         if (!Objects.equals(this.nome, other.nome)) {
@@ -50,8 +63,6 @@ public class Pagina implements Comparable{
         }
         return true;
     }
-    
-    
 
     @Override
     public String toString() {
