@@ -10,7 +10,7 @@ public class PalavraTest {
     
     @Before
     public void setUp() throws Exception {
-        p = new Palavra("word",5);
+        p = new Palavra("word", 5);
     }
 
     @Test

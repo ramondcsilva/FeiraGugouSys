@@ -1,6 +1,7 @@
 package model;
 
 import java.util.LinkedList;
+import java.util.Objects;
 
 public class Palavra implements Comparable {
 
@@ -58,7 +59,26 @@ public class Palavra implements Comparable {
 
     @Override
     public boolean equals(Object obj) {
-        return (this.word.equals(((Palavra) obj).getWord()));
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Palavra other = (Palavra) obj;
+        if (this.relevancia != other.relevancia) {
+            return false;
+        }
+        if (!Objects.equals(this.word, other.word)) {
+            return false;
+        }
+        if (!Objects.equals(this.paginas, other.paginas)) {
+            return false;
+        }
+        return true;
     }
 
     @Override
