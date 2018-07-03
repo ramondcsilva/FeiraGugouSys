@@ -178,11 +178,57 @@ public class Main extends Application {
                         
                         String guardaTA = taText.getText();
                         
+                        TextArea taTextNovo = new TextArea();
+                        taTextNovo.setPrefSize(450, 400);
+                        taTextNovo.setEditable(true);
+                        
+                        TextField tfNovo = new TextField();
+                        tfNovo.setMaxSize(70, 30);
+                        tfNovo.setMinSize(70, 30);
+                        
+                        Button bSalvarArq = new Button("Salvar");
+                        bSalvarArq.setMaxSize(70, 30);
+                        bSalvarArq.setMinSize(70, 30);
+                        bSalvarArq.setOnAction((ActionEvent event) -> {
+                            System.out.println("Passou");
+                            String textF = taTextNovo.getText();
+                            String dir = "src/view/txt/"+ tfNovo.getText()+".txt";
+                            System.out.println(textF);
+                            try { 
+                                SearchController.salvarArq(dir, textF);
+                            } catch (IOException ex) {
+                                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        });
+                        
                         Button bNovo = new Button("Novo");
                         bNovo.setMaxSize(70, 30);
                         bNovo.setMinSize(70, 30);
                         bNovo.setOnAction((ActionEvent event) -> {
+                            Stage novo = new Stage();
+                            HBox hboxTextNovo = new HBox();
                             
+                            VBox vboxSelectionNovo = new VBox(10,new Label(" "));
+                            vboxSelectionNovo.setMinSize(100, 400);
+                            vboxSelectionNovo.setMaxSize(100, 400);
+
+                            Button bSalvarNovo = new Button("Salvar");
+                            bSalvarNovo.setMaxSize(70, 30);
+                            bSalvarNovo.setMinSize(70, 30);
+                            bSalvarNovo.setOnAction(bSalvarArq.getOnAction());
+                            
+                            HBox vSalvarNovo = new HBox(10);
+                            HBox vLabel = new HBox(10);
+                            HBox vTFNovo = new HBox(10);
+                            vSalvarNovo.getChildren().addAll(new Label(" "), bSalvarNovo);
+                            vLabel.getChildren().addAll(new Label(" "), new Label("    Arquivo"));
+                            vTFNovo.getChildren().addAll(new Label(" "), tfNovo);
+                            
+                            vboxSelectionNovo.getChildren().addAll(vLabel, vTFNovo, vSalvarNovo);
+                            hboxTextNovo.getChildren().addAll(taTextNovo, vboxSelectionNovo);
+                            novo.setTitle("Novo Arquivo");
+                            novo.setScene(new Scene(hboxTextNovo, 500, 350));
+                            novo.show();
                         });
                         
                         Button bEditar = new Button("Editar");
@@ -199,11 +245,12 @@ public class Main extends Application {
                             taText.setText(guardaTA);
                             taText.setEditable(false);
                         });
-
+                        
                         Button bSalvar = new Button("Salvar");
                         bSalvar.setMaxSize(70, 30);
                         bSalvar.setMinSize(70, 30);
                         bSalvar.setOnAction((ActionEvent event) -> {
+                            System.out.println("Passou");
                             String textF = taText.getText();
                             String dir = "src/view/txt/"+ (String)val;
                             System.out.println(textF);
@@ -222,6 +269,16 @@ public class Main extends Application {
                             String dir = "src/view/txt/"+ (String)val;
                             File arquivoDeletar = new File(dir);
                             arquivoDeletar.delete();
+                            alPaginas.remove(paginaClicada);
+                            
+                            stage.setScene(null);
+                            
+                            stageRaking.setTitle("Ranking");
+                            stageRaking.setScene(stage.getScene());
+                            stageRaking.setResizable(false);
+                            stageRaking.show();
+                            
+                            text.close();
                         });
                         
                         HBox vEditar = new HBox(10);
@@ -329,14 +386,13 @@ public class Main extends Application {
                         TablePosition tablePosition = (TablePosition) selectedCells.get(0);
                         Object val = tablePosition.getTableColumn().getCellData(newValue);
                         System.out.println("Selected Value: " + val);
-                        
+
                         String textRetorno = "";
                         try {
                             textRetorno = SearchController.imprimeTxt((String) val);
                         } catch (IOException ex) {
-                            
                         }
-
+                        
                         Stage text = new Stage();
                         HBox hboxText = new HBox();
                         
@@ -344,53 +400,129 @@ public class Main extends Application {
                         vboxSelection.setMinSize(100, 400);
                         vboxSelection.setMaxSize(100, 400);
 
-                        TextArea tfText = new TextArea();
-                        tfText.setPrefSize(450, 400);
-                        tfText.setEditable(false);
-                        tfText.setText(textRetorno);
+                        TextArea taText = new TextArea();
+                        taText.setPrefSize(450, 400);
+                        taText.setEditable(false);
+                        taText.setText(textRetorno);
+                        
+                        String guardaTA = taText.getText();
+                        
+                        TextArea taTextNovo = new TextArea();
+                        taTextNovo.setPrefSize(450, 400);
+                        taTextNovo.setEditable(true);
+                        
+                        TextField tfNovo = new TextField();
+                        tfNovo.setMaxSize(70, 30);
+                        tfNovo.setMinSize(70, 30);
+                        
+                        Button bSalvarArq = new Button("Salvar");
+                        bSalvarArq.setMaxSize(70, 30);
+                        bSalvarArq.setMinSize(70, 30);
+                        bSalvarArq.setOnAction((ActionEvent event) -> {
+                            System.out.println("Passou");
+                            String textF = taTextNovo.getText();
+                            String dir = "src/view/txt/"+ tfNovo.getText()+".txt";
+                            System.out.println(textF);
+                            try { 
+                                SearchController.salvarArq(dir, textF);
+                            } catch (IOException ex) {
+                                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        });
+                        
+                        Button bNovo = new Button("Novo");
+                        bNovo.setMaxSize(70, 30);
+                        bNovo.setMinSize(70, 30);
+                        bNovo.setOnAction((ActionEvent event) -> {
+                            Stage novo = new Stage();
+                            HBox hboxTextNovo = new HBox();
+                            
+                            VBox vboxSelectionNovo = new VBox(10,new Label(" "));
+                            vboxSelectionNovo.setMinSize(100, 400);
+                            vboxSelectionNovo.setMaxSize(100, 400);
 
-                        String guardaTA = tfText.getText();
+                            Button bSalvarNovo = new Button("Salvar");
+                            bSalvarNovo.setMaxSize(70, 30);
+                            bSalvarNovo.setMinSize(70, 30);
+                            bSalvarNovo.setOnAction(bSalvarArq.getOnAction());
+                            
+                            HBox vSalvarNovo = new HBox(10);
+                            HBox vLabel = new HBox(10);
+                            HBox vTFNovo = new HBox(10);
+                            vSalvarNovo.getChildren().addAll(new Label(" "), bSalvarNovo);
+                            vLabel.getChildren().addAll(new Label(" "), new Label("    Arquivo"));
+                            vTFNovo.getChildren().addAll(new Label(" "), tfNovo);
+                            
+                            vboxSelectionNovo.getChildren().addAll(vLabel, vTFNovo, vSalvarNovo);
+                            hboxTextNovo.getChildren().addAll(taTextNovo, vboxSelectionNovo);
+                            novo.setTitle("Novo Arquivo");
+                            novo.setScene(new Scene(hboxTextNovo, 500, 350));
+                            novo.show();
+                        });
                         
                         Button bEditar = new Button("Editar");
                         bEditar.setMaxSize(70, 30);
                         bEditar.setMinSize(70, 30);
                         bEditar.setOnAction((ActionEvent event) -> {
-                            tfText.setEditable(true);
+                            taText.setEditable(true);
                         });
 
                         Button bCancelar = new Button("Cancelar");
                         bCancelar.setMaxSize(70, 30);
                         bCancelar.setMinSize(70, 30);
                         bCancelar.setOnAction((ActionEvent event) -> {
-                            tfText.setText(guardaTA);
-                            tfText.setEditable(false);
+                            taText.setText(guardaTA);
+                            taText.setEditable(false);
                         });
-
+                        
                         Button bSalvar = new Button("Salvar");
                         bSalvar.setMaxSize(70, 30);
                         bSalvar.setMinSize(70, 30);
                         bSalvar.setOnAction((ActionEvent event) -> {
-                            String textF = tfText.getText();
+                            System.out.println("Passou");
+                            String textF = taText.getText();
                             String dir = "src/view/txt/"+ (String)val;
                             System.out.println(textF);
                             try {
                                 SearchController.salvarArq(dir, textF);
-                                SearchController.carregaArquivos();
                             } catch (IOException ex) {
                                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         });
-
+                        
+                        Button bRemover = new Button("Deletar");
+                        bRemover.setMaxSize(70, 30);
+                        bRemover.setMinSize(70, 30);
+                        bRemover.setOnAction((ActionEvent event) -> {
+                            //DELETAR corretamente;
+                            String dir = "src/view/txt/"+ (String)val;
+                            File arquivoDeletar = new File(dir);
+                            arquivoDeletar.delete();
+                            alPaginas.remove(paginaClicada);
+                            
+                            stage.setScene(null);
+                            
+                            stageRaking.setTitle("Ranking");
+                            stageRaking.setScene(stage.getScene());
+                            stageRaking.setResizable(false);
+                            stageRaking.show();
+                            
+                            text.close();
+                        });
+                        
                         HBox vEditar = new HBox(10);
                         HBox vCancelar = new HBox(10);
                         HBox vSalvar = new HBox(10);
+                        HBox vRemover = new HBox(10);
+                        HBox vNovo = new HBox(10);
                         vEditar.getChildren().addAll(new Label(" "), bEditar);
                         vCancelar.getChildren().addAll(new Label(" "), bCancelar);
                         vSalvar.getChildren().addAll(new Label(" "), bSalvar);
-
-                        vboxSelection.getChildren().addAll(vEditar, vCancelar, vSalvar);
-                        hboxText.getChildren().addAll(tfText, vboxSelection);
-
+                        vRemover.getChildren().addAll(new Label(" "), bRemover);
+                        vNovo.getChildren().addAll(new Label(" "), bNovo);
+                        
+                        vboxSelection.getChildren().addAll(vNovo, vEditar, vCancelar, vSalvar, vRemover);
+                        hboxText.getChildren().addAll(taText, vboxSelection);
                         text.setTitle("Editor");
                         text.setScene(new Scene(hboxText, 500, 350));
                         text.show();
@@ -398,8 +530,8 @@ public class Main extends Application {
                 }
             });
 
-            stageRaking.setTitle("FeiraGugou");
             stage.setScene(new Scene(hboxRaking, 375, 375));
+            stageRaking.setTitle("Ranking");
             stageRaking.setScene(stage.getScene());
             stageRaking.setResizable(false);
             stageRaking.show();
