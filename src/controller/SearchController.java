@@ -14,7 +14,9 @@ public class SearchController {
 
     public SearchController() {
     }
-
+    /**
+     * Carrega uma lista de arquivos de um diretorio.
+     */
     public static void carregaArquivos() {
         FileFilter filter = (File file) -> file.getName().endsWith(".txt");
 
@@ -26,7 +28,10 @@ public class SearchController {
             guardaPalavras(arquivos.getName());
         }
     }
-
+    /**
+     *Guarda as palavras de um arquivo;
+     * @param diretorio 
+     */
     public static void guardaPalavras(String diretorio) {
         File fArq = new File("src/view/txt/" + diretorio);
         String linhaAtual = " ";
@@ -64,7 +69,12 @@ public class SearchController {
             }
         }
     }
-
+    /**
+     * Imprime o arquivo txt corretamente na tableArea.
+     * @param diretorio
+     * @return  retornoTexto
+     * @throws IOException 
+     */
     public static String imprimeTxt(String diretorio) throws IOException {
         File fArq = new File("src/view/txt/" + diretorio);
         String linhaAtual = "";
@@ -80,7 +90,11 @@ public class SearchController {
         }
         return retornoTexto;
     }
-
+    /**
+     * Procura uma palavra na TreeAVL, aumentando a relevancia a cada busca. 
+     * @param p
+     * @return palavraRetornada
+     */
     public static Palavra search(Palavra p) {
         Palavra palavraRetornada = (Palavra) rank.getPalavras().buscarObj(p);
         if (palavraRetornada != null) {
@@ -88,16 +102,28 @@ public class SearchController {
         }
         return palavraRetornada;
     }
-
+    /**
+     * Pega o Objeto Ranking.
+     * @return rank
+     */
     public static Ranking getRank() {
         return rank;
     }
-
+    /**
+     * Refatora o nome da palavra de acordo com os simbolos encontrados.
+     * @param p
+     * @return String
+     */
     public static String replacePalavra(Palavra p) {
         String text = p.getWord();
         return text.replaceAll("[^A-Za-z0-9_-áàâãéèêíìóôõöúçñÁÀÂÃÉÈÊÍÌÓÔÕÖÚÇÑ\\s]", "");
     }
-
+    /**
+     * Salva uma String em um arquivo.
+     * @param dir
+     * @param text
+     * @throws IOException 
+     */
     public static void salvarArq(String dir,String text) throws IOException{
         FileWriter arqSaida = new FileWriter(dir);
         BufferedWriter arquivo = new BufferedWriter(arqSaida);

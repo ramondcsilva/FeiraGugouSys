@@ -6,7 +6,9 @@ public class TreeAVL implements Serializable {
 
     public Node raiz;
     protected int size;
-
+    /**
+     * Nó da arvore
+     */
     public static class Node {
 
         private Comparable dados;
@@ -72,15 +74,27 @@ public class TreeAVL implements Serializable {
             this.direita = direita;
         }
     }
-
+    /**
+     * Verifica se está vazia.
+     * @return Boolean
+     */
     public boolean estaVazia() {
         return (raiz == null);
     }
-
+    /**
+     * Busca um objeto na arvore.
+     * @param obj
+     * @return Object
+     */
     public Object buscarObj(Comparable obj) {
         return buscarObj(raiz, obj);
     }
-
+    /**
+     * Busca um objeto na arvore
+     * @param objAtual
+     * @param objBuscada
+     * @return Object
+     */
     public Object buscarObj(Node objAtual, Comparable objBuscada) {
         if (objAtual == null || objBuscada == null) {
             return null;
@@ -97,20 +111,34 @@ public class TreeAVL implements Serializable {
             }
         }
     }
-
+    /**
+     * Insere um objeto na arvore.
+     * @param obj 
+     */
     public void insert(Comparable obj) {
         Node objAinserir = new Node(obj);
         insert(this.raiz, objAinserir);
     }
-
+    /**
+     * Verifica se contém um objeto na arvore.
+     * @param obj
+     * @return Boolean
+     */
     public boolean contem(Comparable obj) {
         return estaVazia() ? false : (buscarObj(obj) != null);
     }
-
+    /**
+     * Retorna a quantidade de objetos na arvore.
+     * @return size
+     */
     public int size() {
         return size;
     }
-
+    /**
+     * Insere um objeto na arvore.
+     * @param objAtual
+     * @param objInserir 
+     */
     public void insert(Node objAtual, Node objInserir) {
 
         if (estaVazia()) {
@@ -136,7 +164,10 @@ public class TreeAVL implements Serializable {
         }
         size++;
     }
-
+    /**
+     * Verifica Balanceamento.
+     * @param atual 
+     */
     public void verBalanceamento(Node atual) {
         setBalanceamento(atual);
         int balanceamento = atual.getBalanceamento();
@@ -159,11 +190,18 @@ public class TreeAVL implements Serializable {
             this.raiz = atual;
         }
     }
-
+    /**
+     * Remove objeto da arvore.
+     * @param obj 
+     */
     public void delete(Comparable obj) {
         delete(this.raiz, obj);
     }
-
+    /**
+     * Remove objeto da arvore.
+     * @param atual
+     * @param obj 
+     */
     public void delete(Node atual, Comparable obj) {
         if (estaVazia()) {
         } else {
@@ -179,7 +217,10 @@ public class TreeAVL implements Serializable {
         }
         size--;
     }
-
+    /**
+     * Remove um nó.
+     * @param aRemover 
+     */
     public void removerNoEncontrado(Node aRemover) {
         Node aux;
 
@@ -216,7 +257,11 @@ public class TreeAVL implements Serializable {
             verBalanceamento(aux.getPai());
         }
     }
-
+    /**
+     * Balanceia para a esquerda.
+     * @param inicial
+     * @return Nó
+     */
     public Node rotacaoEsquerda(Node inicial) {
 
         Node direita = inicial.getDireita();
@@ -246,7 +291,11 @@ public class TreeAVL implements Serializable {
 
         return direita;
     }
-
+    /**
+     * Balanceia para a direita
+     * @param inicial
+     * @return Nó
+     */
     public Node rotacaoDireita(Node inicial) {
 
         Node esquerda = inicial.getEsquerda();
@@ -276,17 +325,29 @@ public class TreeAVL implements Serializable {
 
         return esquerda;
     }
-
+    /**
+     * Balanceia duas vezes para esquerda depois direita.
+     * @param inicial
+     * @return Nó
+     */
     public Node duplaRotacaoEsquerdaDireita(Node inicial) {
         inicial.setEsquerda(rotacaoEsquerda(inicial.getEsquerda()));
         return rotacaoDireita(inicial);
     }
-
+    /**
+     * Balanceia duas vezes para direita depois esquerda.
+     * @param inicial
+     * @return Nó
+     */
     public Node duplaRotacaoDireitaEsquerda(Node inicial) {
         inicial.setDireita(rotacaoDireita(inicial.getDireita()));
         return rotacaoEsquerda(inicial);
     }
-
+    /**
+     * Retorna o nó sucessor
+     * @param aRemover
+     * @return No
+     */
     public Node sucessor(Node aRemover) {
         if (aRemover.getDireita() != null) {
             Node r = aRemover.getDireita();
@@ -303,7 +364,11 @@ public class TreeAVL implements Serializable {
             return pai;
         }
     }
-
+    /**
+     * Retorna a altura do nó
+     * @param aVerificar
+     * @return altura
+     */
     public int altura(Node aVerificar) {
         if (aVerificar == null) {
             return -1;
@@ -318,15 +383,23 @@ public class TreeAVL implements Serializable {
             return 1 + Math.max(altura(aVerificar.getEsquerda()), altura(aVerificar.getDireita()));
         }
     }
-
+    /**
+     * Insere um balanceamento.
+     * @param no 
+     */
     public void setBalanceamento(Node no) {
         no.setBalanceamento(altura(no.getDireita()) - altura(no.getEsquerda()));
     }
-
+    /**
+     * Printa a arvore.
+     */
     public void printTree() {
         printTree(raiz);
     }
-
+    /**
+     * printa a arvore.
+     * @param t 
+     */
     protected void printTree(Node t) {
         if (t != null) {
             printTree(t.getEsquerda());
