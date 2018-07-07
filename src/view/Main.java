@@ -1,3 +1,14 @@
+/*  ******************************************************************************
+ *  Autor: Sergio e Ramon
+ *  Componente curricular: Módulo Integrador de Programação
+ *  Concluido em: 
+ *  Declaro que este código foi elaborado por mim de forma individual e não contém
+ *  nenhum trecho de código de outro colega ou de outro autor, tais como provindos
+ *  de livros e apostilas, e páginas ou documentos eletrônicos da Internet.
+ *  Qualquer trecho de código de outra autoria que não a minha está destacado com
+ *  uma citação para o autor e a fonte do código, e estou ciente que estes trechos
+ *  não serão considerados para fins de avaliação.
+ *  ******************************************************************************/
 package view;
 
 import controller.SearchController;
@@ -540,21 +551,13 @@ public class Main extends Application {
         hboxLabel.getChildren().add(bPesquisar);
         hboxLabel.getChildren().add(b);
 
-        //mostra todas as palavras;
-        Button bPalavras = new Button("Palavras");
-        bPalavras.setOnAction((ActionEvent event) -> {
-            System.out.println(tfPalavras.getText());
-            SearchController.getRank().getPalavras().printTree();
-        });
-
-        vboxPesquisa.getChildren().add(bPalavras);
         HBox hboxTV = new HBox();
 
         vboxPesquisa.getChildren().add(hboxTV);
         hboxPesquisa.getChildren().add(vboxPesquisa);
 
         primaryStage.setTitle("FeiraGugou");
-        primaryStage.setScene(new Scene(hboxPesquisa, 375, 150));
+        primaryStage.setScene(new Scene(hboxPesquisa, 375, 120));
         primaryStage.setResizable(false);
         primaryStage.show();
     }
